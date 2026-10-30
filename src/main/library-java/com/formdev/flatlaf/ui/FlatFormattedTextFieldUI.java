@@ -1,0 +1,20 @@
+package com.formdev.flatlaf.ui;
+
+import javax.swing.JComponent;
+import javax.swing.plaf.ComponentUI;
+
+public class FlatFormattedTextFieldUI extends FlatTextFieldUI {
+   public static ComponentUI createUI(JComponent c) {
+      return new FlatFormattedTextFieldUI();
+   }
+
+   @Override
+   protected String getPropertyPrefix() {
+      return "FormattedTextField";
+   }
+
+   @Override
+   String getStyleType() {
+      return "FormattedTextField";
+   }
+}

@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.darwish.nppsim</groupId>
+  <artifactId>RBMK-1500-Simulator</artifactId>
+  <version>1.00Alpha</version>
+
+  <name>RBMK-1500-Simulator</name>
+  <url>https://github.com/kdSuYongSen/Reactor_Simulator_JavaCpp</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>8</maven.compiler.source>
+    <maven.compiler.target>8</maven.compiler.target>
+    <maven.compiler.release>8</maven.compiler.release>
+  </properties>
+
+  <!--
+    ============================================================
+    依赖说明（2026-10 合并改造）：
+    以下三个原 dependencies/ 下的二进制 jar 已用 Vineflower 反编译
+    为源码，直接并入本工程的 src/main/library-java 源码根，
+    不再以二进制依赖形式引入：
+      * FlatLaf 3.0        -> src/main/library-java/com/formdev/flatlaf
+      * JFreeChart 1.5.4   -> src/main/library-java/org/jfree
+                              （org.jfree.chart.servlet 三件套依赖
+                                javax.servlet，模拟器用不到，已剔除）
+      * SteelSeries 3.9.30 -> src/main/library-java/eu/hansolo/steelseries
+    库自带资源（主题 properties、仪表 png/ttf、本地库 dll/so、
+    本地化资源）放在 src/main/library-resources。
+    ============================================================
+  -->
+  <dependencies>
+
+    <!-- 通用工具（应用直接使用） -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.12.0</version>
+    </dependency>
+
+    <!-- JSON（SteamTables 读取饱和蒸汽物性表） -->
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20230227</version>
+    </dependency>
+
+    <!-- SwingX（JXImagePanel / JXPanel 等，应用界面直接使用） -->
+    <dependency>
+      <groupId>org.swinglabs</groupId>
+      <artifactId>swingx</artifactId>
+      <version>1.6.1</version>
+    </dependency>
+
+    <!-- Trident 动画库：SteelSeries 反编译源码的唯一外部依赖
+         （原先是 SteelSeries 二进制 jar 的传递依赖，源码合并后需显式声明） -->
+    <dependency>
+      <groupId>com.github.insubstantial</groupId>
+      <artifactId>trident</artifactId>
+      <version>6.3</version>
+    </dependency>
+
+    <!-- NetBeans OpenIDE：GUI 生成代码里使用
+         org.openide.awt.Mnemonics / org.openide.util.NbBundle。
+         外观已改用源码合并进来的 FlatLaf，不再需要 laf-dark。 -->
+    <dependency>
+      <groupId>org.netbeans.api</groupId>
+      <artifactId>org-openide-awt</artifactId>
+      <version>RELEASE170</version>
+    </dependency>
+    <dependency>
+      <groupId>org.netbeans.api</groupId>
+      <artifactId>org-openide-util</artifactId>
+      <version>RELEASE170</version>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <!-- 反编译并入的第三方源码根与资源根 -->
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>src/main/library-resources</directory>
+      </resource>
+      <!-- 应用自身资源（alarm wav / coreMap.csv / 蒸汽表 json / 图片）
+           原位置保持在 src/main/java/res，不搬动文件 -->
+      <resource>
+        <directory>src/main/java</directory>
+        <includes>
+          <include>res/**</include>
+        </includes>
+      </resource>
+      <!-- NetBeans 生成的 Bundle.properties（410 个本地化键）。
+           运行时 org.openide.util.NbBundle.getMessage() 依赖
+           com/darwish/nppsim/Bundle.properties 位于 classpath，
+           原先未纳入打包，导致点击 Start 时抛 MissingResourceException。 -->
+      <resource>
+        <directory>src/main/java</directory>
+        <includes>
+          <include>com/darwish/nppsim/Bundle*.properties</include>
+        </includes>
+      </resource>
+      <!-- 界面语言包（UTF-8 JSON，com/darwish/nppsim/i18n/<lang>.json） -->
+      <resource>
+        <directory>src/main/java</directory>
+        <includes>
+          <include>com/darwish/nppsim/i18n/*.json</include>
+        </includes>
+      </resource>
+      <!-- 许可与第三方声明：随 jar 分发到 META-INF/RBMK-1500/，
+           确保 fat jar 的使用者能拿到 MIT、第三方许可清单与全文。 -->
+      <resource>
+        <directory>${project.basedir}</directory>
+        <includes>
+          <include>LICENSE</include>
+          <include>NOTICE</include>
+          <include>THIRD-PARTY-NOTICES.md</include>
+          <include>LICENSES/**</include>
+        </includes>
+        <targetPath>META-INF/RBMK-1500</targetPath>
+      </resource>
+    </resources>
+
+    <plugins>
+      <!-- 把反编译得到的第三方源码注册为额外源码根 -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.4.0</version>
+        <executions>
+          <execution>
+            <id>add-library-source</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>src/main/library-java</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.0</version>
+        <configuration>
+          <release>8</release>
+          <encoding>UTF-8</encoding>
+          <!-- 反编译代码会有大量无害告警，不使构建失败 -->
+          <failOnWarning>false</failOnWarning>
+        </configuration>
+      </plugin>
+
+      <!-- 打包 fat jar：应用 class + 反编译进来的库 class + 全部二进制依赖 -->
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.6.0</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <archive>
+            <manifest>
+              <mainClass>com.darwish.nppsim.Loader</mainClass>
+            </manifest>
+          </archive>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+        </configuration>
+      </plugin>
+    </plugins>
+
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>3.1.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>3.0.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.22.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.0.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>2.5.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>2.8.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>3.7.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-project-info-reports-plugin</artifactId>
+          <version>3.0.0</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+</project>

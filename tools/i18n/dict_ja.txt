@@ -1,0 +1,414 @@
+# RBMK-1500 日本語辞書（英語原文 | 訳文）
+3-Element|3要素
+Active|有効
+Audio|オーディオ
+Auto-Control|自動制御
+Automatic|自動
+Bypass|バイパス
+Both|両方
+Clear Event Logs|イベントログを消去
+Close|閉
+close|閉じる
+Condensate|復水
+Condensate Control|復水制御
+Condensate Temperature 1|復水温度 1
+Condensate Temperature 2|復水温度 2
+Condenser 1 Valves|復水器 1 弁
+Condenser 2 Valves|復水器 2 弁
+Condenser 2|復水器 2
+Condenser Vacuum 2|復水器真空 2
+Condenser vacuum 1|復水器真空 1
+Control|制御
+Cooling Pump Cavit.|冷却ポンプキャビテーション
+Cooling Water Pump|冷却水ポンプ
+Cooling Water|冷却水
+Core Map|炉心マップ
+Data|データ
+Dearator 1|脱気器 1
+Dearator 2|脱気器 2
+Dearator 3|脱気器 3
+Dearator 4|脱気器 4
+Dearator Level 1|脱気器水位 1
+Dearators|脱気器
+Demineralized Water Tank|脱塩水タンク
+Discord|Discord（コミュニティ）
+Drum 1 Pressure|ドラム 1 圧力
+Drum 2 Pressure|ドラム 2 圧力
+Drum Level 1|ドラム水位 1
+Drum Level 2|ドラム水位 2
+Drum Press|ドラム圧力
+Drum Temp|ドラム温度
+Drum lvl 1 high|ドラム 1 水位高
+Drum lvl 1 low|ドラム 1 水位低
+Drum lvl 2 high|ドラム 2 水位高
+Drum lvl 2 low|ドラム 2 水位低
+DW Tank Level High|脱塩水タンク水位高
+DW Tank Level Low|脱塩水タンク水位低
+DW Tank Level|脱塩水タンク水位
+DW Tank Temp.|脱塩水タンク温度
+DW Tank|脱塩水タンク
+error|エラー
+Event Log|イベントログ
+Exit to Menu|メニューに戻る
+Feedwater Control|給水制御
+Feedwater Temperature 1|給水温度 1
+Feedwater Temperature 2|給水温度 2
+Feedwater|給水
+File|ファイル
+Filter 1|フィルタ 1
+Filter 2|フィルタ 2
+Flow Control|流量制御
+Game|ゲーム
+GitHub|GitHub
+Header Bypass Valve|ヘッダバイパス弁
+Header Flow|ヘッダ流量
+Header Temp|ヘッダ温度
+High Power|出力高
+High press. 1|圧力高 1
+High press. 2|圧力高 2
+High press. 3|圧力高 3
+High press. 4|圧力高 4
+High drum pressure|ドラム圧力高
+High water level|水位高
+Hotwell 1 high|ホットウェル 1 高
+Hotwell 1 low|ホットウェル 1 低
+Hotwell 2 high|ホットウェル 2 高
+Hotwell 2 low|ホットウェル 2 低
+Hotwell Level 1|ホットウェル水位 1
+Hotwell Level 2|ホットウェル水位 2
+Incoming|受電
+Inflow|流入
+Inlet Valve|入口弁
+Interlock|インターロック
+Interface language|表示言語
+Isolate|隔離
+LAC Authority|LAC 権限
+Language|言語
+limit|限界
+Loading...|読み込み中…
+Load Saved IC|保存状態を読み込む
+Load Standard IC|標準状態を読み込む
+Log|ログ
+Low FW Temp|給水温度低
+Low drum pressure|ドラム圧力低
+Low steam press.|蒸気圧力低
+Low steam temp|蒸気温度低
+Low water level|水位低
+Main 1|主 1
+Main 2|主 2
+Main FWP Cavit|主給水ポンプキャビテーション
+Main FWP Trip|Main FWP トリップ
+Main Feedwater Flow 1|主給水流量 1
+Main Feedwater Flow 2|主給水流量 2
+Main|主
+Manual Control|手動制御
+Manual|手動
+MCP 1 Cavitation|主循環ポンプ 1 Cavitation
+MCP 1 Oil press.|主循環ポンプ 1 Oil press.
+MCP 1 Trip|MCP 1 トリップ
+MCP 2 Cavitation|主循環ポンプ 2 Cavitation
+MCP 2 Oil press.|主循環ポンプ 2 Oil press.
+MCP 2 Trip|MCP 2 トリップ
+MCP 3 Cavitation|主循環ポンプ 3 Cavitation
+MCP 3 Oil press.|主循環ポンプ 3 Oil press.
+MCP 3 Trip|MCP 3 トリップ
+MCP 4 Cavitation|主循環ポンプ 4 Cavitation
+MCP 4 Oil press.|主循環ポンプ 4 Oil press.
+MCP 4 Trip|MCP 4 トリップ
+MCP 5 Cavitation|主循環ポンプ 5 Cavitation
+MCP 5 Oil press.|主循環ポンプ 5 Oil press.
+MCP 5 Trip|MCP 5 トリップ
+MCP 6 Cavitation|主循環ポンプ 6 Cavitation
+MCP 6 Oil press.|主循環ポンプ 6 Oil press.
+MCP 6 Trip|MCP 6 トリップ
+MCP 7 Cavitation|主循環ポンプ 7 Cavitation
+MCP 7 Oil press.|主循環ポンプ 7 Oil press.
+MCP 7 Trip|MCP 7 トリップ
+MCP 8 Cavitation|主循環ポンプ 8 Cavitation
+MCP 8 Oil press.|主循環ポンプ 8 Oil press.
+MCP 8 Trip|MCP 8 トリップ
+MCP Controls|主循環ポンプ制御
+Mods|モッド
+Mute alarms|警報をミュート
+MSV group I|主蒸気止め弁 第I群
+MSV group II|主蒸気止め弁 第II群
+MSV group III|主蒸気止め弁 第III群
+Neuton rate|中性子変化率
+Off|切
+On|入
+Open|開
+open|開く
+Outflow|流出
+Outlet|出口
+Overflow 1|オーバーフロー 1
+Overflow 2|オーバーフロー 2
+Overflow 3|オーバーフロー 3
+Overflow 4|オーバーフロー 4
+Overflow|オーバーフロー
+Parameters Loop 1|ループパラメータ 1
+Parameters Loop 2|ループパラメータ 2
+Paused|一時停止
+Position|位置
+Power|出力
+Pressure 1|圧力 1
+Pressure 2|圧力 2
+Pressure 3|圧力 3
+Pressure 4|圧力 4
+Pump 1 Current|ポンプ 1 電流
+Pump 1 Flow|ポンプ 1 流量
+Pump 2 Current|ポンプ 2 電流
+Pump 2 Flow|ポンプ 2 流量
+Pump 3 Current|ポンプ 3 電流
+Pump 3 Flow|ポンプ 3 流量
+Pump 4 Current|ポンプ 4 電流
+Pump 4 Flow|ポンプ 4 流量
+Pump 5 Current|ポンプ 5 電流
+Pump 5 Flow|ポンプ 5 流量
+Pump 6 Current|ポンプ 6 電流
+Pump 6 Flow|ポンプ 6 流量
+Pump 7 Current|ポンプ 7 電流
+Pump 7 Flow|ポンプ 7 流量
+Pump 8 Current|ポンプ 8 電流
+Pump 8 Flow|ポンプ 8 流量
+Pump 1|ポンプ 1
+Pump 5|ポンプ 5
+Pump 6|ポンプ 6
+Pump 7|ポンプ 7
+Pump 8|ポンプ 8
+Pump Selector|ポンプ選択
+Purification INOP|浄化不能
+Purification and Cooling System|浄化冷却系
+RBMK-1500 Simulator|RBMK-1500 シミュレーター
+Reactivity|反応度
+Regen|再生
+Regenerator 1|再生器 1
+Regenerator 1/2|再生器 1/2
+Relief 1|逃し弁 1
+Relief 2|逃し弁 2
+Reset AZ|AZ リセット
+RESET|リセット
+Return|戻る
+rod sequence|棒順序
+rod traversal|棒行程
+Save IC|状態を保存
+SDV-A open|SDV-A 開
+selection limit|選択限界
+Selsyns|同期検定器
+Setpoint|設定値
+Settings|設定
+SGAM Flow|SGAM 流量
+Sign|符号
+Speed Control|速度制御
+Stage A|A 段
+Stage B|B 段
+start|開始
+Start|スタート
+Steam Flow|蒸気流量
+Steam Inflow|蒸気流入
+Steam Inlet Valve|蒸気入口弁
+Steam Outflow|蒸気流出
+Steam Outlet Valve|蒸気出口弁
+Steam Pressure|蒸気圧力
+stop|停止
+Stop|停止
+Suction Temp|吸込温度
+Synchroscope|同期検定器
+T < 30|T < 30
+Temperature|温度
+Test alarm|テスト再生
+TG-1 Diff. Exp|TG-1 差動膨張
+TG-1 Load|TG-1 負荷
+TG-1 oil press.|TG-1 油圧
+TG-1 Rev. Power|TG-1 逆電力
+TG-1 Speed|TG-1 回転数
+TG-1 Steam Flow|TG-1 蒸気流量
+TG-1 Trip|TG-1 トリップ
+TG-1 Vibration|TG-1 振動
+TG-2 Load|TG-2 負荷
+TG-2 Rev. Power|TG-2 逆電力
+TG-2 Speed|TG-2 回転数
+TG-2 Steam Flow|TG-2 蒸気流量
+TG-2 Trip|TG-2 トリップ
+TG-2 Vibration|TG-2 振動
+Threshold|しきい値
+Throttling Valves|調節弁
+Total Condensate Inflow 2|復水総流入 2
+Total Condensate Inlow 1|復水総流入 1
+Total Condensate Outflow 2|復水総流出 2
+Total Condensate Outlow 1|復水総流出 1
+Total Flow|全流量
+Turbine Bypass SDV-C|タービンバイパス SDV-C
+Turbine-Generators|タービン発電機
+UI Update rate|UI 更新周期
+Vacuum 1 Low|真空 1 低
+Vacuum 1|真空 1
+Vacuum 2 Low|真空 2 低
+Vacuum 2|真空 2
+Valve Flow|弁流量
+Valve Selector|弁選択
+Video|ビデオ
+Volume|音量
+Water Inflow 1|水流入 1
+Water Inflow 2|水流入 2
+Water Inflow 3|水流入 3
+Water Inflow 4|水流入 4
+Water Inlet Valve|水入口弁
+Water Level 2|水位 2
+Water Level 3|水位 3
+Water Level 4|水位 4
+Water level 1|水位 1
+Water level 2|水位 2
+Water level 3|水位 3
+Water level 4|水位 4
+Water Outflow 1|水流出 1
+Water Outflow 2|水流出 2
+Water Outflow 3|水流出 3
+Water Outflow 4|水流出 4
+Water Temp High|水温高
+Water-Level|水位
+Welcome to RBMK-1500 Simulator!|RBMK-1500 シミュレーターへようこそ！
+Window|ウィンドウ
+1A Cavitation|1A キャビテーション
+1A trip|1A トリップ
+1B Cavitation|1B キャビテーション
+1B trip|1B トリップ
+2A Cavitation|2A キャビテーション
+2A trip|2A トリップ
+2B Cavitation|2B キャビテーション
+2B trip|2B トリップ
+ADMS Pumps|ADMS ポンプ
+Alarm sound|警報音
+AR Authority|AR 権限
+Aux 1|補助 1
+Aux 2|補助 2
+Aux FWP Cavit|補助給水ポンプキャビテーション
+Aux FWP Trip|Aux FWP トリップ
+Auxiliary Feedwater Flow 1|補助給水流量 1
+Auxiliary Feedwater Flow 2|補助給水流量 2
+Circ Pump Cavit.|循環ポンプキャビテーション
+Rod Position Indicators|制御棒位置指示計
+Version 1.00Alpha|バージョン 1.00Alpha
+Applied after restarting the simulation.|シミュレーションの再起動後に反映されます。
+Options on this tab will be provided in a later version.|このタブの設定は今後のバージョンで提供されます。
+
+# ---- 第二批（Mnemonics/表格/通道名/事件日志）76 条 ----
+AZ-1 Reset|AZ-1 リセット
+AZ-1 Trip Signal: |AZ-1 トリップ信号：
+Automatic Control Rod Group 1|自動制御棒群 1
+Automatic Control Rod Group 2|自動制御棒群 2
+Aux Feeder Valve 1|補助給水弁 1
+Aux Feeder Valve 2|補助給水弁 2
+Aux Feedwater Pumps|補助給水ポンプ
+Auxiliary Dearator Makeup System|補助脱気器補水系
+BAZ Reset|BAZ リセット
+BAZ Trip Signal: |BAZ トリップ信号：
+Circulation Pumps|循環ポンプ
+Cleared: |クリア：
+Condensate Pumps 1|復水ポンプ 1
+Condensate Pumps 2|復水ポンプ 2
+Condenser 1|復水器 1
+Condenser Circulating Water Pumps|復水器循環水ポンプ
+Cooler 1|冷却器 1
+Cooler 2|冷却器 2
+Cooling System|冷却系
+Cooling Water Drain|冷却水ドレン
+Count:|基数：
+DESYNC|解列
+DW Makeup|脱塩水補給
+Ejector Number|エジェクタ番号
+Fast-Acting Scram Rod|高速スクラム棒
+Fission Chamber|電離箱
+Fuel Channel|燃料チャンネル
+I135:|I135：
+Inlet|入口
+Inlet Cooler 1|入口冷却器 1
+Inlet Cooler 2|入口冷却器 2
+Inlet Temperature:|入口温度：
+Inlet Valves|入口弁
+Inlet Water Temp|入口水温
+Local Automatic Control Rod|局部自動制御棒
+Local Emergency Protection Rod|局部緊急保護棒
+Main Feeder Valves 1|主給水弁 1
+Main Feeder Valves 2|主給水弁 2
+Main Feedwater Pumps|主給水ポンプ
+Makeup Valve Control|補給水弁制御
+Manual Control Rod|手動制御棒
+Manual Control Rod Modernized|手動制御棒（改良型）
+Operational|運転中
+Outlet Temperature:|出口温度：
+PCS Feedwater Inlet|PCS 給水入口
+PDMS-A Channel|PDMS-A チャンネル
+Position: |位置：
+Precision Control|精密制御
+Pressure:|圧力：
+Pump 2|ポンプ 2
+Pump 3|ポンプ 3
+Pump 4|ポンプ 4
+Regenerator 2|再生器 2
+Regenerators|再生器
+Shortened Absorber Rod|短縮吸収棒
+Steam Ejectors 1|蒸気エジェクタ 1
+Steam Ejectors 2|蒸気エジェクタ 2
+TG-1 Condensers|TG-1 復水器
+TG-1 Reset|TG-1 リセット
+TG-1 Reverse Power|TG-1 逆電力
+TG-1 Sync|TG-1 同期
+TG-1 Trip: |TG-1 トリップ：
+TG-2 Condensers|TG-2 復水器
+TG-2 Reset|TG-2 リセット
+TG-2 Reverse Power|TG-2 逆電力
+TG-2 Sync|TG-2 同期
+TG-2 Trip: |TG-2 トリップ：
+Thermal Power:|熱出力：
+Turbine-Generator 1|タービン発電機 1
+Turbine-Generator 2|タービン発電機 2
+Type:|種類：
+Voiding:|ボイド率：
+Warning: |警告：
+Water Inflow:|水流入：
+Water Purification System|水浄化系
+Xe135:|Xe135：
+Game|ゲーム
+Ctrl+Mouse wheel: zoom the window|Ctrl+マウスホイール：ウィンドウを拡大縮小
+Ctrl + wheel up/down to enlarge or shrink the whole interface.|Ctrl を押しながらホイールで画面全体を拡大／縮小できます。
+Reset zoom|ズームをリセット
+
+# ---- 第三批 ----
+IN|挿入
+OUT|引抜
+DW Tank Drain Valve|脱塩水タンク排水弁
+Condenser 1 Drain Valve|復水器 1 排水弁
+Condenser 2 Drain Valve|復水器 2 排水弁
+Condenser 1 Level High|復水器 1 水位高
+Condenser 2 Level High|復水器 2 水位高
+Vacuum Ejector|真空ポンプ
+Vacuum Ejector Control|真空ポンプ制御
+TRIP|トリップ
+SYNC|同期
+Temp|温度
+
+Window mode|ウィンドウモード
+Windowed|ウィンドウ
+Maximized|最大化
+Applied to all open windows immediately; new windows follow this mode.|開いているすべてのウィンドウにすぐ適用され、新しいウィンドウもこの設定に従います。
+Test annunciator|警報音テスト
+Test trip sound|トリップ音テスト
+Add JAR...|JAR を追加...
+Remove selected|選択を削除
+The JAR files listed here are kept between sessions.|ここに表示された JAR ファイルはセッションをまたいで保持されます。
+Master volume|マスター音量
+Alarm volume|警報音量
+Ambient volume|環境音量
+Sound|サウンド
+Annunciator|警報音
+Trip|トリップ
+UI style|UI スタイル
+Classic (dark)|クラシック（ダーク）
+FlatLaf dark|FlatLaf ダーク
+FlatLaf light|FlatLaf ライト
+Original settings|オリジナル設定
+Open log window|ログウィンドウを開く
+Clear event logs|イベントログをクリア
+Apply|適用
+OK|OK
+Moved from the in-game menu. The Pause option stays in the menu.|ゲーム内メニューから移動しました。「一時停止」はゲームメニューに残ります。

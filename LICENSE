@@ -19,3 +19,51 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+================================================================================
+SCOPE AND THIRD-PARTY COMPONENTS
+================================================================================
+
+The MIT license above applies to the original source code of this project
+(Java packages com.darwish.nppsim and com.rbmk.real, the native physics core
+sources under SourceCode/native/, the build scripts under SourceCode/, and
+this project's documentation), except where a file or directory states
+otherwise.
+
+This repository also contains third-party software, in source and/or binary
+form, that is NOT covered by the MIT license and remains under its own
+license. In particular:
+
+  * FlatLaf 3.0 .......................... Apache License 2.0
+  * JFreeChart 1.5.4 ..................... GNU Lesser General Public License 2.1
+  * SteelSeries 3.9.30 ................... BSD 3-Clause License
+  * NetBeans DarkMetal Look-and-Feel ..... Apache License 2.0
+  * SwingX 1.6.1 ......................... GNU Lesser General Public License 2.1
+  * Trident 6.3 .......................... BSD 3-Clause License
+  * Apache Commons Lang 3.12.0 ........... Apache License 2.0
+  * JSON-java (org.json) ................. Public Domain
+  * NetBeans OpenIDE (org-openide-*) ..... Apache License 2.0
+  * JUnit 4.11 (test scope only) ......... Eclipse Public License 1.0
+
+The decompiled library sources under
+  SourceCode/src/main/library-java/com/formdev/
+  SourceCode/src/main/library-java/org/jfree/
+  SourceCode/src/main/library-java/org/netbeans/
+  SourceCode/src/main/library-java/eu/hansolo/
+are derived from those third-party artifacts and remain under their original
+licenses. They are included so the project can be built from source; the
+compile fixes applied to them do not change their licensing.
+
+See THIRD-PARTY-NOTICES.md for the full component list, attribution and the
+corresponding license texts in LICENSES/. If you redistribute this project or
+a jar built from it, keep NOTICE, THIRD-PARTY-NOTICES.md and LICENSES/ with
+the distribution.
+
+Attribution: this project is a fork/derivative of the RBMK-1500 Simulator by
+Ali Darwish (https://github.com/AliDarwish786/RBMK-1500-Simulator).
+
+This fork (Java/C++ port of the simulation core, reworked plant/secondary loop,
+UI panels, scaling and the external layout editor) is maintained at
+https://github.com/kdSuYongSen/Reactor_Simulator_JavaCpp
+which is the project home page shipped in the application (main menu → GitHub).
+================================================================================

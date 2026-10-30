@@ -1,0 +1,414 @@
+# RBMK-1500 繁體中文詞典（英文原文 | 譯文）
+3-Element|三衝量
+Active|有效
+Audio|音訊
+Auto-Control|自動控制
+Automatic|自動
+Bypass|旁路
+Both|兩者
+Clear Event Logs|清除事件日誌
+Close|關閉
+close|關閉
+Condensate|凝結水
+Condensate Control|凝結水控制
+Condensate Temperature 1|凝結水溫度 1
+Condensate Temperature 2|凝結水溫度 2
+Condenser 1 Valves|凝汽器 1 閥門
+Condenser 2 Valves|凝汽器 2 閥門
+Condenser 2|凝汽器 2
+Condenser Vacuum 2|凝汽器真空 2
+Condenser vacuum 1|凝汽器真空 1
+Control|控制
+Cooling Pump Cavit.|冷卻泵汽蝕
+Cooling Water Pump|冷卻水泵
+Cooling Water|冷卻水
+Core Map|爐心圖
+Data|資料
+Dearator 1|除氧器 1
+Dearator 2|除氧器 2
+Dearator 3|除氧器 3
+Dearator 4|除氧器 4
+Dearator Level 1|除氧器水位 1
+Dearators|除氧器
+Demineralized Water Tank|除鹽水箱
+Discord|Discord（社群）
+Drum 1 Pressure|汽鼓 1 壓力
+Drum 2 Pressure|汽鼓 2 壓力
+Drum Level 1|汽鼓水位 1
+Drum Level 2|汽鼓水位 2
+Drum Press|汽鼓壓力
+Drum Temp|汽鼓溫度
+Drum lvl 1 high|汽鼓 1 水位高
+Drum lvl 1 low|汽鼓 1 水位低
+Drum lvl 2 high|汽鼓 2 水位高
+Drum lvl 2 low|汽鼓 2 水位低
+DW Tank Level High|除鹽水箱水位高
+DW Tank Level Low|除鹽水箱水位低
+DW Tank Level|除鹽水箱水位
+DW Tank Temp.|除鹽水箱溫度
+DW Tank|除鹽水箱
+error|錯誤
+Event Log|事件日誌
+Exit to Menu|返回主選單
+Feedwater Control|給水控制
+Feedwater Temperature 1|給水溫度 1
+Feedwater Temperature 2|給水溫度 2
+Feedwater|給水
+File|檔案
+Filter 1|過濾器 1
+Filter 2|過濾器 2
+Flow Control|流量控制
+Game|遊戲
+GitHub|GitHub
+Header Bypass Valve|聯箱旁路閥
+Header Flow|聯箱流量
+Header Temp|聯箱溫度
+High Power|功率高
+High press. 1|壓力高 1
+High press. 2|壓力高 2
+High press. 3|壓力高 3
+High press. 4|壓力高 4
+High drum pressure|汽鼓壓力高
+High water level|水位高
+Hotwell 1 high|熱井 1 高
+Hotwell 1 low|熱井 1 低
+Hotwell 2 high|熱井 2 高
+Hotwell 2 low|熱井 2 低
+Hotwell Level 1|熱井水位 1
+Hotwell Level 2|熱井水位 2
+Incoming|進線
+Inflow|流入
+Inlet Valve|入口閥
+Interlock|聯鎖
+Interface language|介面語言
+Isolate|隔離
+LAC Authority|LAC 權限
+Language|語言
+limit|限值
+Loading...|載入中…
+Load Saved IC|載入存檔工況
+Load Standard IC|載入標準工況
+Log|日誌
+Low FW Temp|給水溫度低
+Low drum pressure|汽鼓壓力低
+Low steam press.|蒸汽壓力低
+Low steam temp|蒸汽溫度低
+Low water level|水位低
+Main 1|主 1
+Main 2|主 2
+Main FWP Cavit|主給水泵汽蝕
+Main FWP Trip|Main FWP 跳閘
+Main Feedwater Flow 1|主給水流量 1
+Main Feedwater Flow 2|主給水流量 2
+Main|主
+Manual Control|手動控制
+Manual|手動
+MCP 1 Cavitation|主循環泵 1 Cavitation
+MCP 1 Oil press.|主循環泵 1 Oil press.
+MCP 1 Trip|MCP 1 跳閘
+MCP 2 Cavitation|主循環泵 2 Cavitation
+MCP 2 Oil press.|主循環泵 2 Oil press.
+MCP 2 Trip|MCP 2 跳閘
+MCP 3 Cavitation|主循環泵 3 Cavitation
+MCP 3 Oil press.|主循環泵 3 Oil press.
+MCP 3 Trip|MCP 3 跳閘
+MCP 4 Cavitation|主循環泵 4 Cavitation
+MCP 4 Oil press.|主循環泵 4 Oil press.
+MCP 4 Trip|MCP 4 跳閘
+MCP 5 Cavitation|主循環泵 5 Cavitation
+MCP 5 Oil press.|主循環泵 5 Oil press.
+MCP 5 Trip|MCP 5 跳閘
+MCP 6 Cavitation|主循環泵 6 Cavitation
+MCP 6 Oil press.|主循環泵 6 Oil press.
+MCP 6 Trip|MCP 6 跳閘
+MCP 7 Cavitation|主循環泵 7 Cavitation
+MCP 7 Oil press.|主循環泵 7 Oil press.
+MCP 7 Trip|MCP 7 跳閘
+MCP 8 Cavitation|主循環泵 8 Cavitation
+MCP 8 Oil press.|主循環泵 8 Oil press.
+MCP 8 Trip|MCP 8 跳閘
+MCP Controls|主循環泵控制
+Mods|模組
+Mute alarms|靜音警報
+MSV group I|主汽閥 I 組
+MSV group II|主汽閥 II 組
+MSV group III|主汽閥 III 組
+Neuton rate|中子變化率
+Off|關
+On|開
+Open|開
+open|開
+Outflow|流出
+Outlet|出口
+Overflow 1|溢流 1
+Overflow 2|溢流 2
+Overflow 3|溢流 3
+Overflow 4|溢流 4
+Overflow|溢流
+Parameters Loop 1|迴路參數 1
+Parameters Loop 2|迴路參數 2
+Paused|已暫停
+Position|位置
+Power|功率
+Pressure 1|壓力 1
+Pressure 2|壓力 2
+Pressure 3|壓力 3
+Pressure 4|壓力 4
+Pump 1 Current|泵 1 電流
+Pump 1 Flow|泵 1 流量
+Pump 2 Current|泵 2 電流
+Pump 2 Flow|泵 2 流量
+Pump 3 Current|泵 3 電流
+Pump 3 Flow|泵 3 流量
+Pump 4 Current|泵 4 電流
+Pump 4 Flow|泵 4 流量
+Pump 5 Current|泵 5 電流
+Pump 5 Flow|泵 5 流量
+Pump 6 Current|泵 6 電流
+Pump 6 Flow|泵 6 流量
+Pump 7 Current|泵 7 電流
+Pump 7 Flow|泵 7 流量
+Pump 8 Current|泵 8 電流
+Pump 8 Flow|泵 8 流量
+Pump 1|泵 1
+Pump 5|泵 5
+Pump 6|泵 6
+Pump 7|泵 7
+Pump 8|泵 8
+Pump Selector|泵選擇
+Purification INOP|淨化失效
+Purification and Cooling System|淨化與冷卻系統
+RBMK-1500 Simulator|RBMK-1500 模擬器
+Reactivity|反應度
+Regen|再生
+Regenerator 1|再生器 1
+Regenerator 1/2|再生器 1/2
+Relief 1|洩壓閥 1
+Relief 2|洩壓閥 2
+Reset AZ|復歸 AZ
+RESET|復歸
+Return|返回
+rod sequence|棒序
+rod traversal|棒行程
+Save IC|儲存工況
+SDV-A open|SDV-A 開
+selection limit|選擇限值
+Selsyns|同期指示器
+Setpoint|設定值
+Settings|設定
+SGAM Flow|SGAM 流量
+Sign|符號
+Speed Control|轉速控制
+Stage A|A 級
+Stage B|B 級
+start|開始
+Start|開始
+Steam Flow|蒸汽流量
+Steam Inflow|蒸汽流入
+Steam Inlet Valve|蒸汽入口閥
+Steam Outflow|蒸汽流出
+Steam Outlet Valve|蒸汽出口閥
+Steam Pressure|蒸汽壓力
+stop|停止
+Stop|停止
+Suction Temp|吸入溫度
+Synchroscope|同期表
+T < 30|T < 30
+Temperature|溫度
+Test alarm|試聽
+TG-1 Diff. Exp|TG-1 差脹
+TG-1 Load|TG-1 負載
+TG-1 oil press.|TG-1 油壓
+TG-1 Rev. Power|TG-1 反向功率
+TG-1 Speed|TG-1 轉速
+TG-1 Steam Flow|TG-1 蒸汽流量
+TG-1 Trip|TG-1 跳閘
+TG-1 Vibration|TG-1 振動
+TG-2 Load|TG-2 負載
+TG-2 Rev. Power|TG-2 反向功率
+TG-2 Speed|TG-2 轉速
+TG-2 Steam Flow|TG-2 蒸汽流量
+TG-2 Trip|TG-2 跳閘
+TG-2 Vibration|TG-2 振動
+Threshold|門檻值
+Throttling Valves|調節閥
+Total Condensate Inflow 2|凝結水總流入 2
+Total Condensate Inlow 1|凝結水總流入 1
+Total Condensate Outflow 2|凝結水總流出 2
+Total Condensate Outlow 1|凝結水總流出 1
+Total Flow|總流量
+Turbine Bypass SDV-C|汽輪機旁路 SDV-C
+Turbine-Generators|汽輪發電機組
+UI Update rate|介面更新率
+Vacuum 1 Low|真空 1 低
+Vacuum 1|真空 1
+Vacuum 2 Low|真空 2 低
+Vacuum 2|真空 2
+Valve Flow|閥門流量
+Valve Selector|閥門選擇
+Video|視訊
+Volume|音量
+Water Inflow 1|進水流量 1
+Water Inflow 2|進水流量 2
+Water Inflow 3|進水流量 3
+Water Inflow 4|進水流量 4
+Water Inlet Valve|進水閥
+Water Level 2|水位 2
+Water Level 3|水位 3
+Water Level 4|水位 4
+Water level 1|水位 1
+Water level 2|水位 2
+Water level 3|水位 3
+Water level 4|水位 4
+Water Outflow 1|出水流量 1
+Water Outflow 2|出水流量 2
+Water Outflow 3|出水流量 3
+Water Outflow 4|出水流量 4
+Water Temp High|水溫高
+Water-Level|水位
+Welcome to RBMK-1500 Simulator!|歡迎使用 RBMK-1500 模擬器！
+Window|視窗
+1A Cavitation|1A 汽蝕
+1A trip|1A 跳閘
+1B Cavitation|1B 汽蝕
+1B trip|1B 跳閘
+2A Cavitation|2A 汽蝕
+2A trip|2A 跳閘
+2B Cavitation|2B 汽蝕
+2B trip|2B 跳閘
+ADMS Pumps|ADMS 泵
+Alarm sound|警報聲音
+AR Authority|AR 權限
+Aux 1|輔 1
+Aux 2|輔 2
+Aux FWP Cavit|輔給水泵汽蝕
+Aux FWP Trip|Aux FWP 跳閘
+Auxiliary Feedwater Flow 1|輔助給水流量 1
+Auxiliary Feedwater Flow 2|輔助給水流量 2
+Circ Pump Cavit.|循環泵汽蝕
+Rod Position Indicators|控制棒位置指示
+Version 1.00Alpha|版本 1.00Alpha
+Applied after restarting the simulation.|重新啟動模擬後生效。
+Options on this tab will be provided in a later version.|本頁選項將於後續版本提供。
+
+# ---- 第二批（Mnemonics/表格/通道名/事件日志）76 条 ----
+AZ-1 Reset|AZ-1 復歸
+AZ-1 Trip Signal: |AZ-1 跳脫信號：
+Automatic Control Rod Group 1|自動控制棒組 1
+Automatic Control Rod Group 2|自動控制棒組 2
+Aux Feeder Valve 1|輔助給水閥 1
+Aux Feeder Valve 2|輔助給水閥 2
+Aux Feedwater Pumps|輔助給水泵
+Auxiliary Dearator Makeup System|輔助除氧器補水系統
+BAZ Reset|BAZ 復歸
+BAZ Trip Signal: |BAZ 跳脫信號：
+Circulation Pumps|循環泵
+Cleared: |已清除：
+Condensate Pumps 1|凝結水泵 1
+Condensate Pumps 2|凝結水泵 2
+Condenser 1|凝汽器 1
+Condenser Circulating Water Pumps|凝汽器循環水泵
+Cooler 1|冷卻器 1
+Cooler 2|冷卻器 2
+Cooling System|冷卻系統
+Cooling Water Drain|冷卻水排放
+Count:|數量：
+DESYNC|解聯
+DW Makeup|除鹽水補水
+Ejector Number|抽氣器編號
+Fast-Acting Scram Rod|快速停爐棒
+Fission Chamber|游離腔
+Fuel Channel|燃料通道
+I135:|I135：
+Inlet|進口
+Inlet Cooler 1|進口冷卻器 1
+Inlet Cooler 2|進口冷卻器 2
+Inlet Temperature:|進口溫度：
+Inlet Valves|入口閥
+Inlet Water Temp|進口水溫
+Local Automatic Control Rod|就地自動控制棒
+Local Emergency Protection Rod|就地緊急保護棒
+Main Feeder Valves 1|主給水閥 1
+Main Feeder Valves 2|主給水閥 2
+Main Feedwater Pumps|主給水泵
+Makeup Valve Control|補水閥控制
+Manual Control Rod|手動控制棒
+Manual Control Rod Modernized|手動控制棒（改良型）
+Operational|運轉中
+Outlet Temperature:|出口溫度：
+PCS Feedwater Inlet|PCS 給水進口
+PDMS-A Channel|PDMS-A 通道
+Position: |位置：
+Precision Control|精調控制
+Pressure:|壓力：
+Pump 2|泵 2
+Pump 3|泵 3
+Pump 4|泵 4
+Regenerator 2|再生器 2
+Regenerators|再生器
+Shortened Absorber Rod|短吸收棒
+Steam Ejectors 1|蒸汽抽氣器 1
+Steam Ejectors 2|蒸汽抽氣器 2
+TG-1 Condensers|TG-1 凝汽器
+TG-1 Reset|TG-1 復歸
+TG-1 Reverse Power|TG-1 反向功率
+TG-1 Sync|TG-1 併聯
+TG-1 Trip: |TG-1 跳脫：
+TG-2 Condensers|TG-2 凝汽器
+TG-2 Reset|TG-2 復歸
+TG-2 Reverse Power|TG-2 反向功率
+TG-2 Sync|TG-2 併聯
+TG-2 Trip: |TG-2 跳脫：
+Thermal Power:|熱功率：
+Turbine-Generator 1|汽輪發電機 1
+Turbine-Generator 2|汽輪發電機 2
+Type:|類型：
+Voiding:|空泡分率：
+Warning: |警告：
+Water Inflow:|進水流量：
+Water Purification System|水淨化系統
+Xe135:|Xe135：
+Game|遊戲
+Ctrl+Mouse wheel: zoom the window|Ctrl+滑鼠滾輪：縮放視窗
+Ctrl + wheel up/down to enlarge or shrink the whole interface.|按住 Ctrl 滾動滾輪可放大／縮小整個介面。
+Reset zoom|重設縮放
+
+# ---- 第三批 ----
+IN|插入
+OUT|拔出
+DW Tank Drain Valve|除鹽水箱排水閥
+Condenser 1 Drain Valve|凝汽器 1 排水閥
+Condenser 2 Drain Valve|凝汽器 2 排水閥
+Condenser 1 Level High|凝汽器 1 水位高
+Condenser 2 Level High|凝汽器 2 水位高
+Vacuum Ejector|真空泵
+Vacuum Ejector Control|真空泵控制
+TRIP|跳閘
+SYNC|同期
+Temp|溫度
+
+Window mode|視窗模式
+Windowed|視窗化
+Maximized|最大化
+Applied to all open windows immediately; new windows follow this mode.|立即套用至所有已開啟的視窗；新開的視窗自動套用。
+Test annunciator|試聽警報器聲
+Test trip sound|試聽跳閘聲
+Add JAR...|新增 JAR...
+Remove selected|移除所選
+The JAR files listed here are kept between sessions.|此處列出的 JAR 檔案會跨工作階段保留。
+Master volume|主音量
+Alarm volume|警報音量
+Ambient volume|環境音量
+Sound|聲音
+Annunciator|警報器聲
+Trip|跳閘
+UI style|UI 風格
+Classic (dark)|經典（深色）
+FlatLaf dark|FlatLaf 深色
+FlatLaf light|FlatLaf 淺色
+Original settings|原版設定
+Open log window|開啟日誌視窗
+Clear event logs|清空事件日誌
+Apply|套用
+OK|確定
+Moved from the in-game menu. The Pause option stays in the menu.|已由遊戲內選單移入此處。「暫停」選項仍保留在遊戲選單中。

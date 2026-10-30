@@ -1,0 +1,30 @@
+# ===== 构建产物 (排除) =====
+target/
+bin/
+*.class
+
+# ===== 调试/分析产物 (排除) =====
+*.dump
+*.dumpstream
+*.log
+
+# ===== 预编译二进制库 (已反编译进源码，无需提交) =====
+dependencies/*.jar
+
+# ===== IDE / 系统噪声 (排除) =====
+.vscode/
+.settings/
+*.iml
+Thumbs.db
+.DS_Store
+ehthumbs.db
+
+# ===== 本地项目数据 (排除) =====
+.workbuddy/
+
+# ===== 原始 jar 与备份 (SourceCode 之外，排除) =====
+OriginalJarFile/
+vscode-config-backup-20261011/
+
+# ===== Markdown 文档 (按需求排除 .md) =====
+*.md

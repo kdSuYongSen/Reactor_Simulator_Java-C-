@@ -1,0 +1,711 @@
+# -*- coding: utf-8 -*-
+"""
+RBMK-1500 主窗口布局编辑器
+============================
+把主反应堆窗口的每个面板简化为一个彩色方块，鼠标拖动即可改变位置（拖右下角可改变大小），
+每次编辑自动保存到 ui_layout.json；Java 程序每秒轮询该文件，约 1 秒内界面自动跟随更新。
+
+放大功能：改变方块大小时，Java 侧面板内部的所有按键、文字、参数显示（LCD 数值）都会
+按比例同步缩放；堆芯图为近似圆形内容，非正方形时自动居中留边保持圆形。
+
+内容缩放：工具栏第二行的「内容缩放（按键/文字）」滑块（或键盘 `[` `]`），
+可在方块尺寸不变的情况下，单独放大/缩小**选中方块内部**的按键与文字（×0.5 ~ ×2.5），
+写入 JSON 的 content_scale 字段，Java 侧实时应用。
+
+大方块包小方块（调整面板内按键/数据显示的位置）：
+选中方块后点「展开内部」（或双击方块），方块内会显示出每个按键/数据显示的"小方块"，
+拖动即可调整它们在面板内的位置（写入 JSON 的 children 字段，Java 侧实时应用）。
+「重置为默认」会让内部小方块也回到默认位置。
+子组件清单来自游戏运行时导出的 ui_layout_children.json（与布局文件同目录）；
+若提示缺少该文件，请先启动一次游戏再重开本编辑器。
+
+用法：
+    python layout_editor.py [--out 布局文件路径]
+    默认写入 <工程目录>/ui_layout.json（即本脚本 ../../ui_layout.json）。
+    从游戏内「设置 → 工具 → 主窗口布局编辑器」启动时会自动传入正确路径。
+    Java 端搜索顺序：工作目录 → jar 目录 → jar 目录上级（工程目录）。
+
+操作：
+    · 左键拖动方块            —— 移动位置
+    · 拖动方块的右下角        —— 改变大小（内部按键/参数同步缩放）
+    · 「展开内部」/ 双击方块  —— 显示面板内的按键/数据显示小方块，拖动调整内部位置
+    · 单击选中 + 方向键       —— 1px 微调（Shift+方向键 = 10px；选中内部小方块时同理）
+    · 「内容缩放」滑块        —— 调整选中方块内部按键/文字的大小（1.00=默认）
+    · `[` / `]`               —— 内容缩放微调 0.05（Shift = 0.25）
+    · Ctrl+滚轮 / +/-         —— 缩放画布
+    · 工具栏                  —— 保存 / 重置为默认 / 删除文件（恢复默认 GroupLayout）
+    · 方块拖到窗口可见范围之外时，Java 侧自动出现对应方向的滚动条
+"""
+import json
+import os
+import sys
+import time
+import tkinter as tk
+from tkinter import messagebox
+
+# ---------------------------------------------------------------------------
+# 面板定义：key（与 Java 端 layoutBlockMap 一一对应）, 中文名, 默认 x, y, 宽, 高, 颜色, 内容缩放
+# 默认坐标来自 Java 端 GroupLayout 计算值（见 log.txt 的 [Layout] 默认坐标 行）
+# 内容缩放：1.0 = 仅随方块尺寸自动缩放；可单独放大/缩小方块内部的按键与文字
+# ---------------------------------------------------------------------------
+BLOCKS = [
+    ("annunciator",     "报警阵列",      13,  13, 570,  94, "#c0504d", 1.0),
+    ("ack",             "ACK",           589, 13,  45,  51, "#b06a6a", 1.0),
+    ("mwt",             "MWt 功率",      643, 13, 260, 125, "#e8a33d", 1.0),
+    ("mwe1",            "MWe-1",         643, 144, 110,  41, "#e6c860", 1.0),
+    ("mwe2",            "MWe-2",         759, 144, 110,  41, "#e6c860", 1.0),
+    ("coremap",         "堆芯图",        954, 13, 350, 350, "#20b2a6", 1.0),
+    ("az_panel",        "AZ 面板",       13, 191, 258, 132, "#9b59b6", 1.0),
+    ("rod_limit",       "棒限值/棒序",   13, 329, 200,  60, "#8e9aaf", 1.0),
+    ("reactivity",      "反应性",        277, 191, 355, 183, "#4a90d9", 1.0),
+    ("autocontrol",     "自动控制",      643, 191, 305, 163, "#6fbf73", 1.0),
+    ("rod_buttons",     "复位/拔出/插入", 13, 395,  98, 145, "#cd7f32", 1.0),
+    ("rod_grid",        "控制棒网格",    117, 395, 520, 315, "#2fa8a0", 1.0),
+    ("offline_cooling", "离线冷却",      643, 395, 229, 130, "#e8836b", 1.0),
+    ("auto_az",         "自动AZ",        643, 531, 140, 140, "#c2a83e", 1.0),
+    ("rod_limit_panel", "控制棒数量限制", 789, 531, 140, 140, "#4e8f8f", 1.0),
+    ("loop_params",     "回路参数",      954, 395, 350, 235, "#5c6bc0", 1.0),
+]
+
+DEFAULT_CANVAS = (1366, 768)      # 主窗口整体参考尺寸
+VIEWPORT = (1334, 705)            # 窗口可见区域参考（画虚线框）
+MARGIN = 40                       # 画布四周可拖出边距
+
+# 脚本位置 → 默认输出 = 工程目录（SourceCode/）下的 ui_layout.json
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+DEFAULT_OUT = os.path.normpath(os.path.join(SCRIPT_DIR, "..", "..", "ui_layout.json"))
+
+FONT = ("Microsoft YaHei UI", 9)
+FONT_SMALL = ("Microsoft YaHei UI", 8)
+FONT_BOLD = ("Microsoft YaHei UI", 10, "bold")
+FONT_TINY = ("Microsoft YaHei UI", 7)
+
+SCALE_MIN, SCALE_MAX = 0.5, 2.5      # 内容缩放范围
+
+
+def _clamp_scale(v):
+    """内容缩放值钳制/容错：非法或缺失 → 1.0"""
+    try:
+        s = float(v)
+    except (TypeError, ValueError):
+        return 1.0
+    return max(SCALE_MIN, min(SCALE_MAX, round(s, 2)))
+
+
+class LayoutEditor:
+
+    def __init__(self, root, out_path):
+        self.root = root
+        self.out_path = out_path
+        self.scale = 1.0
+        # key -> [label, x, y, w, h, content_scale]（注意颜色是元组第 6 位，缩放是第 7 位）
+        self.blocks = {b[0]: list(b[1:6]) + [b[7]] for b in BLOCKS}
+        self.colors = {b[0]: b[6] for b in BLOCKS}
+        self.order = [b[0] for b in BLOCKS]
+        self.selected = None
+        self.drag = None            # dict(mode, key, dx, dy / child idx)
+        self.autosave = tk.BooleanVar(value=True)
+        self._updating_scale = False   # 抑制滑块程序同步触发的回调
+        # ---- 大方块包小方块 ----
+        self.children = {}           # panelKey -> [ {"i","cls","text","x","y","w","h"}, ... ]（默认位置）
+        self.child_overrides = {}    # panelKey -> { "索引": [x, y] }（用户拖动后的覆盖值）
+        self.expanded = None         # 当前展开内部的方块 key
+        self.child_sel = None        # 当前选中的内部小方块 (panelKey, 索引str)
+        self._load_children_file()
+
+        # 若已有布局文件 → 载入其坐标/内容缩放/内部小方块覆盖值
+        if os.path.isfile(self.out_path):
+            try:
+                with open(self.out_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                for k, v in (data.get("panels") or {}).items():
+                    if k in self.blocks and v.get("w", 0) > 0 and v.get("h", 0) > 0:
+                        self.blocks[k][1] = int(v["x"])
+                        self.blocks[k][2] = int(v["y"])
+                        self.blocks[k][3] = int(v["w"])
+                        self.blocks[k][4] = int(v["h"])
+                        self.blocks[k][5] = _clamp_scale(v.get("content_scale"))
+                        kids = v.get("children")
+                        if isinstance(kids, dict) and kids:
+                            self.child_overrides[k] = {
+                                str(i): [int(c.get("x", 0)), int(c.get("y", 0))]
+                                for i, c in kids.items() if isinstance(c, dict)}
+            except Exception as e:
+                print("载入布局文件失败（使用默认值）:", e)
+
+        self._build_ui()
+        self.redraw()
+
+    # ------------------------------------------------------- 子组件（小方块）
+    def children_file_path(self):
+        return os.path.join(os.path.dirname(os.path.abspath(self.out_path)),
+                            "ui_layout_children.json")
+
+    def _load_children_file(self):
+        """读取游戏导出的子组件清单（面板内小方块的默认位置）"""
+        path = self.children_file_path()
+        self.children = {}
+        if not os.path.isfile(path):
+            return
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            for k, v in (data.get("panels") or {}).items():
+                kids = v.get("children") if isinstance(v, dict) else None
+                if isinstance(kids, list):
+                    self.children[k] = kids
+        except Exception as e:
+            print("读取子组件清单失败:", e)
+
+    def child_def(self, panel_key, idx_str):
+        """按索引找子组件定义（含默认位置）"""
+        for ch in self.children.get(panel_key, []):
+            if str(ch.get("i")) == str(idx_str):
+                return ch
+        return None
+
+    def child_pos(self, panel_key, idx_str):
+        """子组件当前生效位置（覆盖值优先，否则默认值）"""
+        ov = self.child_overrides.get(panel_key, {}).get(str(idx_str))
+        if ov is not None:
+            return int(ov[0]), int(ov[1])
+        ch = self.child_def(panel_key, idx_str)
+        if ch is not None:
+            return int(ch.get("x", 0)), int(ch.get("y", 0))
+        return 0, 0
+
+    def child_hit(self, mcx, mcy):
+        """在展开的面板内命中哪个小方块（返回 (panelKey, 索引str) 或 (None, None)）"""
+        key = self.expanded
+        if not key:
+            return None, None
+        label, x, y, w, h, _cs = self.blocks[key]
+        if not (x <= mcx <= x + w and y <= mcy <= y + h):
+            return None, None
+        lx, ly = mcx - x, mcy - y
+        for ch in reversed(self.children.get(key, [])):
+            cx, cy = self.child_pos(key, ch.get("i"))
+            cw, chh = int(ch.get("w", 20)), int(ch.get("h", 16))
+            if cx <= lx <= cx + cw and cy <= ly <= cy + chh:
+                return key, str(ch.get("i"))
+        return None, None
+
+    def toggle_expand(self, key=None):
+        key = key or self.selected
+        if not key:
+            messagebox.showinfo("展开内部", "请先单击选中一个方块。")
+            return
+        self.expanded = None if self.expanded == key else key
+        self.child_sel = None
+        if self.expanded:
+            if not self.children.get(key):
+                self._load_children_file()   # 再试一次（用户可能刚启动过游戏）
+            if not self.children.get(key):
+                messagebox.showwarning(
+                    "缺少子组件信息",
+                    "未找到 %s 的子组件清单。\n\n请先启动一次游戏（会自动导出 ui_layout_children.json，"
+                    "与布局文件同目录），然后点「重新载入」或重开本编辑器。" % key)
+            if self.scale < 1.5:
+                self.scale = 1.6    # 展开时适当放大，方便拖动小方块
+        self.redraw()
+        self.update_status()
+
+    # ------------------------------------------------------------------ UI
+    def _build_ui(self):
+        root = self.root
+        root.title("RBMK-1500 布局编辑器 — " + self.out_path)
+
+        bar = tk.Frame(root)
+        bar.pack(side=tk.TOP, fill=tk.X)
+        tk.Button(bar, text="保存", width=6, command=self.save_manual).pack(side=tk.LEFT, padx=3, pady=3)
+        tk.Button(bar, text="重置为默认", width=10, command=self.reset_defaults).pack(side=tk.LEFT, padx=3, pady=3)
+        tk.Button(bar, text="删除布局文件", width=12, command=self.delete_file).pack(side=tk.LEFT, padx=3, pady=3)
+        tk.Button(bar, text="重新载入", width=8, command=self.reload_file).pack(side=tk.LEFT, padx=3, pady=3)
+        self.expand_btn = tk.Button(bar, text="展开内部 ▸", width=10, command=self.toggle_expand)
+        self.expand_btn.pack(side=tk.LEFT, padx=3, pady=3)
+        tk.Checkbutton(bar, text="自动保存", variable=self.autosave).pack(side=tk.LEFT, padx=10)
+        self.hint = tk.Label(bar, text="拖动=移动 · 右下角=改大小 · 双击/「展开内部」编辑小方块 · Ctrl+滚轮缩放",
+                             fg="#666666", font=FONT_SMALL)
+        self.hint.pack(side=tk.LEFT, padx=12)
+
+        # 第二行工具栏：内容缩放（单独调整选中方块内部的按键 / 文字大小）
+        bar2 = tk.Frame(root)
+        bar2.pack(side=tk.TOP, fill=tk.X)
+        tk.Label(bar2, text="内容缩放（按键/文字）：", font=FONT).pack(side=tk.LEFT, padx=(6, 2), pady=(0, 4))
+        self.scale_var = tk.DoubleVar(value=1.0)
+        self.scale_slider = tk.Scale(bar2, from_=SCALE_MIN, to=SCALE_MAX, resolution=0.05,
+                                     orient=tk.HORIZONTAL, variable=self.scale_var, length=230,
+                                     command=self.on_scale_changed, state=tk.DISABLED,
+                                     digits=2, font=FONT_SMALL)
+        self.scale_slider.pack(side=tk.LEFT, pady=(0, 4))
+        tk.Label(bar2, text="选中方块后调整（1.00 = 仅随方块尺寸自动缩放；[ / ] 键微调，Shift=大步）",
+                 fg="#666666", font=FONT_SMALL).pack(side=tk.LEFT, padx=8)
+
+        body = tk.Frame(root)
+        body.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        self.canvas = tk.Canvas(body, bg="#2b2b30", highlightthickness=0)
+        self.hbar = tk.Scrollbar(body, orient=tk.HORIZONTAL, command=self.canvas.xview)
+        self.vbar = tk.Scrollbar(body, orient=tk.VERTICAL, command=self.canvas.yview)
+        self.canvas.configure(xscrollcommand=self.hbar.set, yscrollcommand=self.vbar.set)
+        self.canvas.grid(row=0, column=0, sticky="nsew")
+        self.vbar.grid(row=0, column=1, sticky="ns")
+        self.hbar.grid(row=1, column=0, sticky="ew")
+        body.rowconfigure(0, weight=1)
+        body.columnconfigure(0, weight=1)
+
+        status = tk.Frame(root)
+        status.pack(side=tk.BOTTOM, fill=tk.X)
+        self.status = tk.Label(status, text="就绪", anchor="w", font=FONT)
+        self.status.pack(side=tk.LEFT, fill=tk.X, padx=6)
+        self.save_label = tk.Label(status, text="尚未保存", anchor="e", fg="#666666", font=FONT_SMALL)
+        self.save_label.pack(side=tk.RIGHT, padx=6)
+
+        c = self.canvas
+        c.bind("<ButtonPress-1>", self.on_press)
+        c.bind("<B1-Motion>", self.on_motion)
+        c.bind("<ButtonRelease-1>", self.on_release)
+        c.bind("<Motion>", self.on_hover)
+        c.bind("<MouseWheel>", self.on_wheel)
+        c.bind("<Double-Button-1>", self.on_double)
+        root.bind("<plus>", lambda e: self.zoom(1.1))
+        root.bind("<equal>", lambda e: self.zoom(1.1))
+        root.bind("<minus>", lambda e: self.zoom(1 / 1.1))
+        root.bind("<Left>", lambda e: self.nudge(-1, 0, e.state))
+        root.bind("<Right>", lambda e: self.nudge(1, 0, e.state))
+        root.bind("<Up>", lambda e: self.nudge(0, -1, e.state))
+        root.bind("<Down>", lambda e: self.nudge(0, 1, e.state))
+        root.bind("<bracketleft>", lambda e: self.adj_scale(-1, e.state))
+        root.bind("<bracketright>", lambda e: self.adj_scale(1, e.state))
+
+        # 窗口尺寸：尽量容纳整个画布，超出则滚动
+        need_w = int((DEFAULT_CANVAS[0] + MARGIN * 2) * self.scale) + 60
+        need_h = int((DEFAULT_CANVAS[1] + MARGIN * 2) * self.scale) + 110
+        sw = root.winfo_screenwidth()
+        sh = root.winfo_screenheight()
+        w = min(need_w, sw - 40)
+        h = min(need_h, sh - 80)
+        root.geometry("%dx%d+%d+%d" % (w, h, max((sw - w) // 2, 0), max((sh - h) // 3, 0)))
+
+    # ------------------------------------------------------------- 坐标换算
+    def m2c(self, x, y):
+        return (x + MARGIN) * self.scale, (y + MARGIN) * self.scale
+
+    def c2m(self, cx, cy):
+        return cx / self.scale - MARGIN, cy / self.scale - MARGIN
+
+    # --------------------------------------------------------------- 绘制
+    def redraw(self):
+        c = self.canvas
+        c.delete("all")
+        S = self.scale
+        total_w = int((DEFAULT_CANVAS[0] + MARGIN * 2) * S)
+        total_h = int((DEFAULT_CANVAS[1] + MARGIN * 2) * S)
+        c.configure(scrollregion=(0, 0, total_w, total_h))
+
+        # 背景网格（每 100px 一格）
+        x0, y0 = self.m2c(0, 0)
+        x1, y1 = self.m2c(DEFAULT_CANVAS[0], DEFAULT_CANVAS[1])
+        for gx in range(0, DEFAULT_CANVAS[0] + 1, 100):
+            px, _ = self.m2c(gx, 0)
+            c.create_line(px, y0, px, y1, fill="#3a3a42")
+        for gy in range(0, DEFAULT_CANVAS[1] + 1, 100):
+            _, py = self.m2c(0, gy)
+            c.create_line(x0, py, x1, py, fill="#3a3a42")
+
+        # 窗口可见区域
+        vw, vh = self.m2c(VIEWPORT[0], VIEWPORT[1])
+        c.create_rectangle(x0, y0, vw, vh, outline="#7a7a8a", dash=(6, 4), width=2)
+        c.create_text(x0 + 6, y0 + 6, text="窗口可见区域 %dx%d" % VIEWPORT, anchor="nw",
+                      fill="#9a9aa8", font=FONT_SMALL)
+
+        # 面板方块
+        for key in self.order:
+            label, x, y, w, h, cs = self.blocks[key]
+            px0, py0 = self.m2c(x, y)
+            px1, py1 = self.m2c(x + w, y + h)
+            sel = (key == self.selected)
+            c.create_rectangle(px0, py0, px1, py1,
+                               fill=self.colors[key],
+                               outline="#ffffff" if sel else "#101014",
+                               width=3 if sel else 2)
+            cx, cy = (px0 + px1) / 2, (py0 + py1) / 2
+            c.create_text(cx, cy - 8 * S, text=label, fill="#ffffff", font=FONT_BOLD)
+            if (px1 - px0) > 70 * S and (py1 - py0) > 30 * S:
+                info = "%d,%d  %d×%d" % (x, y, w, h)
+                if abs(cs - 1.0) > 1e-9:
+                    info += "  ×%.2f" % cs
+                c.create_text(cx, cy + 10 * S, text=info,
+                              fill="#e8e8e8", font=FONT_SMALL)
+            if sel:   # 右下角拖拽把手
+                s = 6 * S
+                c.create_rectangle(px1 - s, py1 - s, px1, py1, fill="#ffffff", outline="#101014")
+
+        # 展开的面板：绘制内部的"小方块"（按键/数据显示），可拖动调整位置
+        if self.expanded:
+            key = self.expanded
+            label, x, y, w, h, _cs = self.blocks[key]
+            dx0, dy0 = self.m2c(x, y)
+            dx1, dy1 = self.m2c(x + w, y + h)
+            c.create_rectangle(dx0, dy0, dx1, dy1, outline="#ffd34d", dash=(4, 3), width=1)
+            kids = self.children.get(key, [])
+            if kids:
+                for ch in kids:
+                    idx = str(ch.get("i"))
+                    cx, cy = self.child_pos(key, idx)
+                    cw, chh = int(ch.get("w", 20)), int(ch.get("h", 16))
+                    px0, py0 = self.m2c(x + cx, y + cy)
+                    px1, py1 = self.m2c(x + cx + cw, y + cy + chh)
+                    is_sel = (self.child_sel == (key, idx))
+                    c.create_rectangle(px0, py0, px1, py1,
+                                       fill="#1e1e24",
+                                       outline="#ffd34d" if is_sel else "#cfcfd8",
+                                       width=2 if is_sel else 1)
+                    t = ch.get("text") or ch.get("cls") or ("#%s" % idx)
+                    if (px1 - px0) > 16 * S:
+                        c.create_text((px0 + px1) / 2, (py0 + py1) / 2, text=str(t)[:10],
+                                      fill="#f0f0f0", font=FONT_TINY)
+                c.create_text(dx0 + 4, dy0 - 12 * S, anchor="nw",
+                              text="内部编辑中：拖动小方块调位置（双击方块或再点「收起内部」退出）",
+                              fill="#ffd34d", font=FONT_SMALL)
+            else:
+                c.create_text(dx0 + 4, dy0 + 4, anchor="nw", text="（无子组件信息）",
+                              fill="#ffd34d", font=FONT_SMALL)
+
+        # 十字坐标轴原点提示
+        c.create_text(x0 - 4, y0 - 4, text="(0,0)", anchor="se", fill="#9a9aa8", font=FONT_SMALL)
+
+        # 同步「展开/收起」按钮文字
+        try:
+            self.expand_btn.configure(text="收起内部 ◂" if self.expanded else "展开内部 ▸")
+        except Exception:
+            pass
+
+    # --------------------------------------------------------------- 交互
+    def hit(self, mcx, mcy):
+        """返回命中的 (key, mode)：mode = 'move' 或 'resize'；后画的在上面，故逆序。"""
+        handle = 10 / self.scale
+        for key in reversed(self.order):
+            label, x, y, w, h, _cs = self.blocks[key]
+            if x + w - handle <= mcx <= x + w and y + h - handle <= mcy <= y + h:
+                return key, "resize"
+        for key in reversed(self.order):
+            label, x, y, w, h, _cs = self.blocks[key]
+            if x <= mcx <= x + w and y <= mcy <= y + h:
+                return key, "move"
+        return None, None
+
+    def on_press(self, ev):
+        self.canvas.focus_set()
+        mcx, mcy = self.c2m(self.canvas.canvasx(ev.x), self.canvas.canvasy(ev.y))
+        # 1) 展开面板内的小方块优先命中
+        ckey, cidx = self.child_hit(mcx, mcy)
+        if ckey:
+            self.child_sel = (ckey, cidx)
+            px, py = self.child_pos(ckey, cidx)
+            bkey = self.blocks[ckey]
+            self.drag = dict(mode="child", key=ckey, idx=cidx,
+                             dx=mcx - (bkey[1] + px), dy=mcy - (bkey[2] + py))
+            self.redraw()
+            self.update_status()
+            return
+        self.child_sel = None
+        key, mode = self.hit(mcx, mcy)
+        self.selected = key
+        if self.expanded and key != self.expanded:
+            self.expanded = None   # 选中别的方块时收起内部编辑
+        if key:
+            label, x, y, w, h, _cs = self.blocks[key]
+            if mode == "move":
+                self.drag = dict(mode="move", key=key, dx=mcx - x, dy=mcy - y)
+            else:
+                self.drag = dict(mode="resize", key=key, p0=(mcx, mcy), size=(w, h))
+        self.sync_scale_slider()
+        self.redraw()
+        self.update_status()
+
+    def on_double(self, ev):
+        mcx, mcy = self.c2m(self.canvas.canvasx(ev.x), self.canvas.canvasy(ev.y))
+        key, _mode = self.hit(mcx, mcy)
+        if key:
+            self.selected = key
+            self.toggle_expand(key)
+
+    def on_motion(self, ev):
+        mcx, mcy = self.c2m(self.canvas.canvasx(ev.x), self.canvas.canvasy(ev.y))
+        if self.drag:
+            d = self.drag
+            if d["mode"] == "child":
+                key, idx = d["key"], d["idx"]
+                bx, by = self.blocks[key][1], self.blocks[key][2]
+                nx = int(round(mcx - bx - d["dx"]))
+                ny = int(round(mcy - by - d["dy"]))
+                self.child_overrides.setdefault(key, {})[idx] = [nx, ny]
+                self.redraw()
+                self.update_status()
+                return
+            b = self.blocks[d["key"]]
+            if d["mode"] == "move":
+                b[1] = max(0, int(round(mcx - d["dx"])))
+                b[2] = max(0, int(round(mcy - d["dy"])))
+            else:
+                b[3] = max(40, int(round(d["size"][0] + mcx - d["p0"][0])))
+                b[4] = max(24, int(round(d["size"][1] + mcy - d["p0"][1])))
+            self.redraw()
+            self.update_status()
+        else:
+            ckey, _cidx = self.child_hit(mcx, mcy)
+            if ckey:
+                self.canvas.configure(cursor="fleur")
+                return
+            key, mode = self.hit(mcx, mcy)
+            self.canvas.configure(cursor="sizing" if mode == "resize" else
+                                  ("fleur" if mode == "move" else ""))
+
+    def on_release(self, ev):
+        if self.drag:
+            self.drag = None
+            self.autosave_now()
+
+    def on_hover(self, ev):
+        mcx, mcy = self.c2m(self.canvas.canvasx(ev.x), self.canvas.canvasy(ev.y))
+        self.status.configure(text="鼠标 (%d, %d)" % (mcx, mcy))
+
+    def on_wheel(self, ev):
+        if ev.state & 0x0004:   # Ctrl 按下
+            self.zoom(1.1 if ev.delta > 0 else 1 / 1.1)
+
+    def zoom(self, factor):
+        self.scale = max(0.4, min(2.0, self.scale * factor))
+        self.redraw()
+
+    # ----------------------------------------------------------- 内容缩放
+    def sync_scale_slider(self):
+        """滑块同步为当前选中方块的内容缩放值（未选中则禁用滑块）。"""
+        if not self.selected:
+            self.scale_slider.configure(state=tk.DISABLED)
+            return
+        self.scale_slider.configure(state=tk.NORMAL)
+        self._updating_scale = True
+        try:
+            self.scale_var.set(round(self.blocks[self.selected][5], 2))
+        finally:
+            self._updating_scale = False
+
+    def on_scale_changed(self, value):
+        """滑块回调：调整选中方块的内容缩放（程序同步时由 _updating_scale 抑制）。"""
+        if self._updating_scale or not self.selected:
+            return
+        s = _clamp_scale(value)
+        if abs(self.blocks[self.selected][5] - s) < 1e-9:
+            return
+        self.blocks[self.selected][5] = s
+        self.redraw()
+        self.update_status()
+        self.autosave_now()
+
+    def adj_scale(self, sign, state):
+        """键盘 [ / ] 微调内容缩放（Shift = 0.25 步长，否则 0.05）。"""
+        if not self.selected:
+            return
+        step = 0.25 if (state & 0x0001) else 0.05
+        s = _clamp_scale(self.blocks[self.selected][5] + sign * step)
+        self.blocks[self.selected][5] = s
+        self.sync_scale_slider()
+        self.redraw()
+        self.update_status()
+        self.autosave_now()
+
+    def nudge(self, dx, dy, state):
+        step = 10 if (state & 0x0001) else 1   # Shift = 10px
+        # 选中的是内部小方块 → 移动小方块
+        if self.child_sel:
+            key, idx = self.child_sel
+            px, py = self.child_pos(key, idx)
+            self.child_overrides.setdefault(key, {})[idx] = [px + dx * step, py + dy * step]
+            self.redraw()
+            self.update_status()
+            self.autosave_now()
+            return
+        if not self.selected:
+            return
+        b = self.blocks[self.selected]
+        b[1] = max(0, b[1] + dx * step)
+        b[2] = max(0, b[2] + dy * step)
+        self.redraw()
+        self.update_status()
+        self.autosave_now()
+
+    # --------------------------------------------------------------- 保存
+    def to_json(self):
+        panels = {}
+        for key in self.order:
+            label, x, y, w, h, cs = self.blocks[key]
+            entry = {"x": int(x), "y": int(y), "w": int(w), "h": int(h),
+                     "content_scale": round(float(cs), 2)}
+            # 内部小方块位置（仅写被拖动过的；其余由 Java 保持默认位置）
+            ov = self.child_overrides.get(key)
+            if ov:
+                kids = {}
+                for idx, xy in ov.items():
+                    ch = self.child_def(key, idx)
+                    kids[str(idx)] = {"cls": (ch.get("cls", "") if ch else ""),
+                                      "x": int(xy[0]), "y": int(xy[1])}
+                entry["children"] = kids
+            panels[key] = entry
+        return {
+            "mode": "absolute",
+            "generator": "RBMK-1500 layout editor",
+            "saved_at": time.strftime("%Y-%m-%d %H:%M:%S"),
+            "canvas": {"w": DEFAULT_CANVAS[0], "h": DEFAULT_CANVAS[1]},
+            "panels": panels,
+        }
+
+    def write_file(self):
+        tmp = self.out_path + ".tmp"
+        with open(tmp, "w", encoding="utf-8", newline="\n") as f:
+            json.dump(self.to_json(), f, ensure_ascii=False, indent=2)
+            f.write("\n")
+        os.replace(tmp, self.out_path)   # 原子替换：Java 端读到的要么旧要么新，不会读到半截
+        self.save_label.configure(text="已保存 %s" % time.strftime("%H:%M:%S"))
+
+    def autosave_now(self):
+        if self.autosave.get():
+            try:
+                self.write_file()
+            except Exception as e:
+                self.save_label.configure(text="保存失败: %s" % e)
+
+    def save_manual(self):
+        try:
+            self.write_file()
+        except Exception as e:
+            messagebox.showerror("保存失败", str(e))
+
+    def reset_defaults(self):
+        for b in BLOCKS:
+            self.blocks[b[0]][1] = b[2]
+            self.blocks[b[0]][2] = b[3]
+            self.blocks[b[0]][3] = b[4]
+            self.blocks[b[0]][4] = b[5]
+            self.blocks[b[0]][5] = b[7]   # 内容缩放回默认
+        self.child_overrides.clear()      # 内部小方块也回默认位置
+        self.child_sel = None
+        self.sync_scale_slider()
+        self.redraw()
+        if os.path.isfile(self.out_path):
+            self.autosave_now()   # 已有文件时写出，让 Java 实时恢复
+        self.update_status()
+
+    def delete_file(self):
+        if not os.path.isfile(self.out_path):
+            return
+        if messagebox.askyesno("删除布局文件",
+                               "删除后 Java 程序将实时恢复默认 GroupLayout 布局。\n确定删除？"):
+            os.remove(self.out_path)
+            self.save_label.configure(text="已删除文件（Java 恢复默认布局）")
+
+    def reload_file(self):
+        # 顺便重新读取子组件清单（用户可能刚启动过游戏导出）
+        self._load_children_file()
+        if not os.path.isfile(self.out_path):
+            messagebox.showinfo("重新载入", "布局文件不存在（当前为默认值）。")
+            self.redraw()
+            self.update_status()
+            return
+        with open(self.out_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        self.child_overrides = {}
+        for k, v in (data.get("panels") or {}).items():
+            if k in self.blocks:
+                self.blocks[k][1] = int(v["x"])
+                self.blocks[k][2] = int(v["y"])
+                self.blocks[k][3] = int(v["w"])
+                self.blocks[k][4] = int(v["h"])
+                self.blocks[k][5] = _clamp_scale(v.get("content_scale"))
+                kids = v.get("children")
+                if isinstance(kids, dict) and kids:
+                    self.child_overrides[k] = {
+                        str(i): [int(c.get("x", 0)), int(c.get("y", 0))]
+                        for i, c in kids.items() if isinstance(c, dict)}
+        self.child_sel = None
+        self.sync_scale_slider()
+        self.redraw()
+        self.update_status()
+
+    def update_status(self):
+        if self.child_sel:
+            key, idx = self.child_sel
+            px, py = self.child_pos(key, idx)
+            ch = self.child_def(key, idx) or {}
+            name = ch.get("text") or ch.get("cls") or ("#%s" % idx)
+            self.status.configure(text="内部小方块：%s [%s #%s]   面板内位置 x=%d y=%d"
+                                       "（方向键微调；拖动可移动）" % (name, key, idx, px, py))
+            return
+        if self.selected:
+            label, x, y, w, h, cs = self.blocks[self.selected]
+            if abs(cs - 1.0) < 1e-9:
+                note = "   内容缩放 ×1.00（默认）"
+            else:
+                note = "   内容缩放 ×%.2f" % cs
+            if self.expanded == self.selected:
+                nkid = len(self.children.get(self.selected, []))
+                note += "   [已展开内部：%d 个小方块]" % nkid
+            if self.selected == "coremap":
+                note += "   [圆形内容：Java 自动保持圆形（非正方形时两侧留边）]"
+            elif self.selected == "rod_grid":
+                note += "   [格子随尺寸缩放；将方块设为正方形可保持圆形]"
+            self.status.configure(text="选中：%s   x=%d y=%d   %d×%d%s" % (label, x, y, w, h, note))
+        else:
+            self.status.configure(text="未选中（单击方块可选中；拖动改位置/大小；"
+                                       "双击方块展开内部小方块；「内容缩放」滑块调整内部按键/文字大小）")
+
+
+def main():
+    argv = sys.argv[1:]
+    debug_info = "--debug-info" in argv
+    out = DEFAULT_OUT
+    if "--out" in argv:
+        i = argv.index("--out")
+        if i + 1 < len(argv):
+            out = argv[i + 1]
+    else:
+        rest = [a for a in argv if not a.startswith("--")]
+        if rest:
+            out = rest[0]
+
+    if "--selftest" in argv:
+        # 无窗口自检：验证参数解析与内部状态（供自动化/首次部署检查用）
+        root = tk.Tk()
+        root.withdraw()
+        ed = LayoutEditor(root, out)
+        nscaled = sum(1 for k in ed.blocks if abs(ed.blocks[k][5] - 1.0) > 1e-9)
+        nkids = sum(len(v) for v in ed.children.values())
+        print("SELFTEST OK blocks=%d scaled=%d children=%d out=%s exists=%s"
+              % (len(ed.blocks), nscaled, nkids, os.path.abspath(out), os.path.isfile(out)), flush=True)
+        root.destroy()
+        return
+
+    root = tk.Tk()
+    ed = LayoutEditor(root, out)
+    if "--expand" in argv:
+        # 调试/截图用：启动即展开指定方块
+        i = argv.index("--expand")
+        if i + 1 < len(argv):
+            k = argv[i + 1]
+            if k in ed.blocks:
+                ed.selected = k
+                ed.expanded = k
+                ed.scale = 1.6
+                ed.redraw()
+    if debug_info:
+        def _dump():
+            root.update_idletasks()
+            c = ed.canvas
+            print("DEBUG canvas_origin=%d,%d scale=%s margin=%d"
+                  % (c.winfo_rootx(), c.winfo_rooty(), ed.scale, MARGIN), flush=True)
+        root.after(700, _dump)
+    root.mainloop()
+
+
+if __name__ == "__main__":
+    main()

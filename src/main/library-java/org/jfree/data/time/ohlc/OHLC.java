@@ -1,0 +1,61 @@
+package org.jfree.data.time.ohlc;
+
+import java.io.Serializable;
+import org.jfree.chart.HashUtils;
+
+public class OHLC implements Serializable {
+   private double open;
+   private double close;
+   private double high;
+   private double low;
+
+   public OHLC(double open, double high, double low, double close) {
+      this.open = open;
+      this.close = close;
+      this.high = high;
+      this.low = low;
+   }
+
+   public double getOpen() {
+      return this.open;
+   }
+
+   public double getClose() {
+      return this.close;
+   }
+
+   public double getHigh() {
+      return this.high;
+   }
+
+   public double getLow() {
+      return this.low;
+   }
+
+   @Override
+   public boolean equals(Object obj) {
+      if (obj == this) {
+         return true;
+      } else if (!(obj instanceof OHLC)) {
+         return false;
+      } else {
+         OHLC that = (OHLC)obj;
+         if (this.open != that.open) {
+            return false;
+         } else if (this.close != that.close) {
+            return false;
+         } else {
+            return this.high != that.high ? false : this.low == that.low;
+         }
+      }
+   }
+
+   @Override
+   public int hashCode() {
+      int result = 193;
+      result = HashUtils.hashCode(result, this.open);
+      result = HashUtils.hashCode(result, this.high);
+      result = HashUtils.hashCode(result, this.low);
+      return HashUtils.hashCode(result, this.close);
+   }
+}

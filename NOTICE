@@ -1,0 +1,29 @@
+RBMK-1500 Simulator
+Copyright (c) 2026 kdSYS
+
+This product includes software developed at
+The Apache Software Foundation (http://www.apache.org/).
+
+Apache NetBeans
+Copyright 2017-2023 The Apache Software Foundation
+
+This product includes software developed at
+The Apache Software Foundation (http://www.apache.org/).
+
+The code is based on NetBeans, that has been kindly donated to the Apache
+Software Foundation by Oracle.
+
+The code was Copyright 1997-2016 Oracle and/or its affiliates.  The Initial
+Developer of the Original Software was Sun Microsystems, Inc. Portions
+Copyright 1997-2006 Sun Microsystems, Inc.
+
+--------------------------------------------------------------------------------
+
+This product also includes FlatLaf (Apache-2.0), JFreeChart (LGPL-2.1),
+SteelSeries (BSD-3-Clause), SwingX (LGPL-2.1), Trident (BSD-3-Clause),
+Apache Commons Lang (Apache-2.0), JSON-java (Public Domain) and NetBeans
+OpenIDE (Apache-2.0).
+
+See THIRD-PARTY-NOTICES.md for the complete list and LICENSES/ for the full
+license texts. Keep this file, THIRD-PARTY-NOTICES.md and LICENSES/ with any
+redistribution.
